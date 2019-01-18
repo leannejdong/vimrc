@@ -34,7 +34,6 @@ vim-coffee-script https://github.com/kchmck/vim-coffee-script
 vim-colors-solarized https://github.com/altercation/vim-colors-solarized
 vim-indent-object https://github.com/michaeljsmith/vim-indent-object
 vim-less https://github.com/groenewege/vim-less
-vim-markdown https://github.com/tpope/vim-markdown
 vim-pyte https://github.com/therubymug/vim-pyte
 vim-snipmate https://github.com/garbas/vim-snipmate
 vim-snippets https://github.com/honza/vim-snippets
@@ -55,7 +54,6 @@ lightline.vim https://github.com/itchyny/lightline.vim
 lightline-ale https://github.com/maximbaz/lightline-ale
 vim-abolish https://github.com/tpope/tpope-vim-abolish
 mru.vim https://github.com/vim-scripts/mru.vim
-vim-markdown https://github.com/plasticboy/vim-markdown
 """.strip()
 
 GITHUB_ZIP = '%s/archive/master.zip'
