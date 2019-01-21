@@ -143,6 +143,7 @@ func! s:matchend(text, open)
     end
     return [a:text, strpart(a:text, 0, len(a:text)-len(m)), m]
 endf
+
 func! s:matchbegin(text, close)
     let m = matchstr(a:text, '^\V'.a:close)
     if m == ""
@@ -159,7 +160,7 @@ endf
 "   add <!-- --> pair and remove '{' for html file
 func! AutoPairsDefine(pairs, ...)
   let r = copy(g:AutoPairs)
-  if a:0 > 1
+  if a:0 > 0
     for open in a:1
       unlet r[open]
     endfor
@@ -186,6 +187,9 @@ func! AutoPairsInsert(key)
 
   " check close pairs
   for [open, close, opt] in b:AutoPairsList
+    if close == ''
+      continue
+    end
     if a:key == g:AutoPairsWildClosedPair || opt['mapclose'] && close[0] == a:key
       " the close pair is in the same line
       let m = matchstr(afterline, '^\v\s*\V'.close)
@@ -213,38 +217,38 @@ func! AutoPairsInsert(key)
   " check open pairs
   let text=before.a:key
   for [open, close, opt] in b:AutoPairsList
-    let m = s:matchend(text, open)
-    if len(m) > 0
+    let ms = s:matchend(text, open)
+    if len(ms) > 0
       " process the open pair
       
       " remove inserted pair
       " eg: if the pairs include < > and  <!-- --> 
       " when <!-- is detected the inserted pair < > should be clean up 
       " <?php ?> should backspace 4 times php and <?
-      let target = m[1]
-      let openPair = m[2]
+      let target = ms[1]
+      let openPair = ms[2]
       let text = before
       let i = 0
       while len(text) >= len(target) && target != text 
         let found = 0
         " delete pair
         for [o, c, opt] in b:AutoPairsList
-          let m = s:matchend(text, o)
-          if len(m) > 0
+          let ms = s:matchend(text, o)
+          if len(ms) > 0
             let found = 1
-            let text = m[1]
+            let text = ms[1]
             let i = i + 1
             break
           end
         endfor
         if !found
           " delete charactor
-          let m = s:matchend(text, '\v.')
-          if len(m) == 0
+          let ms = s:matchend(text, '\v.')
+          if len(ms) == 0
             break
           end
           let i = i + 1
-          let text = m[1]
+          let text = ms[1]
         end
       endwhile
       let bs = repeat("\<BS>", i)
@@ -310,6 +314,9 @@ func! AutoPairsFastWrap()
     normal! p
   else
     for [open, close, opt] in b:AutoPairsList
+      if close == ''
+        continue
+      end
       if after =~ '^\s*\V'.open
         call search(close, 'We')
         normal! p
@@ -393,6 +400,9 @@ func! AutoPairsSpace()
   let [before, after, ig] = s:getline()
 
   for [open, close, opt] in b:AutoPairsList
+    if close == ''
+      continue
+    end
     if before =~ '\V'.open.'\v$' && after =~ '^\V'.close
       return "\<SPACE>\<SPACE>".s:Left
     end
@@ -444,20 +454,29 @@ func! AutoPairsInit()
   let b:AutoPairsList = []
 
   " buffer level map pairs keys
+  " n - do not map the first charactor of closed pair to close key
+  " m - close key jumps through multi line
+  " s - close key jumps only in the same line
   for [open, close] in items(b:AutoPairs)
-    let o = open[len(open)-1]
-    let m = matchlist(close, '\v(.*)//(.*)$')
+    let o = open[-1:-1]
+    let c = close[0]
     let opt = {'mapclose': 1, 'multiline':1}
+    if o == c
+      let opt['multiline'] = 0
+    end
+    let m = matchlist(close, '\v(.*)//(.*)$')
     if len(m) > 0 
       if m[2] =~ 'n'
         let opt['mapclose'] = 0
+      end
+      if m[2] =~ 'm'
+        let opt['multiline'] = 1
       end
       if m[2] =~ 's'
         let opt['multiline'] = 0
       end
       let close = m[1]
     end
-    let c = close[0]
     call AutoPairsMap(o)
     if o != c && c != '' && opt['mapclose']
       call AutoPairsMap(c)
