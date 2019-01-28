@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 try:
     import concurrent.futures as futures
 except ImportError:
@@ -54,6 +56,7 @@ lightline.vim https://github.com/itchyny/lightline.vim
 lightline-ale https://github.com/maximbaz/lightline-ale
 vim-abolish https://github.com/tpope/tpope-vim-abolish
 mru.vim https://github.com/vim-scripts/mru.vim
+vim-easyescape https://github.com/zhou13/vim-easyescape
 """.strip()
 
 GITHUB_ZIP = '%s/archive/master.zip'
