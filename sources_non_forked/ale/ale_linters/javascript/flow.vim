@@ -156,7 +156,8 @@ function! ale_linters#javascript#flow#Handle(buffer, lines) abort
         \}
 
         if has_key(l:error, 'extra')
-            let l:errorToAdd.detail = s:GetDetails(l:error)
+            let l:errorToAdd.detail = l:errorToAdd.text
+            \   . "\n" . s:GetDetails(l:error)
         endif
 
         call add(l:output, l:errorToAdd)
@@ -167,7 +168,7 @@ endfunction
 
 call ale#linter#Define('javascript', {
 \   'name': 'flow',
-\   'executable_callback': 'ale_linters#javascript#flow#GetExecutable',
+\   'executable': function('ale_linters#javascript#flow#GetExecutable'),
 \   'command_chain': [
 \       {'callback': 'ale_linters#javascript#flow#VersionCheck'},
 \       {'callback': 'ale_linters#javascript#flow#GetCommand'},
