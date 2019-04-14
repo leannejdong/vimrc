@@ -7,4 +7,3 @@ autocmd InsertLeave * match ExtraWhitespace /\t\+/
 autocmd BufWinEnter * match ExtraWhitespace /\t\+/
 autocmd BufWinLeave * call clearmatches()
 
-set spell spelllang=en_us
