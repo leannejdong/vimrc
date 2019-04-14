@@ -56,7 +56,9 @@ let s:packages = {
       \ 'gogetdoc':      ['github.com/zmb3/gogetdoc'],
       \ 'goimports':     ['golang.org/x/tools/cmd/goimports'],
       \ 'golint':        ['golang.org/x/lint/golint'],
+      \ 'gopls':         ['golang.org/x/tools/cmd/gopls'],
       \ 'gometalinter':  ['github.com/alecthomas/gometalinter'],
+      \ 'golangci-lint': ['github.com/golangci/golangci-lint/cmd/golangci-lint'],
       \ 'gomodifytags':  ['github.com/fatih/gomodifytags'],
       \ 'gorename':      ['golang.org/x/tools/cmd/gorename'],
       \ 'gotags':        ['github.com/jstemmer/gotags'],
@@ -232,6 +234,14 @@ function! s:gofiletype_post()
   let &g:fileencodings = s:current_fileencodings
 endfunction
 
+function! s:register()
+  if !(&modifiable && expand('<amatch>') ==# 'go')
+    return
+  endif
+
+  call go#lsp#DidOpen(expand('<afile>:p'))
+endfunction
+
 augroup vim-go
   autocmd!
 
@@ -243,6 +253,10 @@ augroup vim-go
   autocmd BufNewFile *.s if &modifiable | setlocal fileencoding=utf-8 fileformat=unix | endif
   autocmd BufRead *.s call s:gofiletype_pre()
   autocmd BufReadPost *.s call s:gofiletype_post()
+
+  if go#util#has_job()
+    autocmd FileType * call s:register()
+  endif
 augroup end
 
 " restore Vi compatibility settings

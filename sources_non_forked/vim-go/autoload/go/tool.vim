@@ -86,8 +86,10 @@ function! go#tool#Info(showstatus) abort
     call go#complete#Info(a:showstatus)
   elseif l:mode == 'guru'
     call go#guru#DescribeInfo(a:showstatus)
+  elseif l:mode == 'gopls'
+    call go#lsp#Info(a:showstatus)
   else
-    call go#util#EchoError('go_info_mode value: '. l:mode .' is not valid. Valid values are: [gocode, guru]')
+    call go#util#EchoError('go_info_mode value: '. l:mode .' is not valid. Valid values are: [gocode, guru, gopls]')
   endif
 endfunction
 
@@ -112,7 +114,18 @@ function! go#tool#Exists(importpath) abort
 endfunction
 
 function! go#tool#DescribeBalloon()
-  return go#guru#DescribeBalloon()
+  let l:fname = fnamemodify(bufname(v:beval_bufnr), ':p')
+  call go#lsp#Hover(l:fname, v:beval_lnum, v:beval_col, funcref('s:balloon', []))
+  return ''
+endfunction
+
+function! s:balloon(msg)
+  if has('balloon_eval')
+    call balloon_show(a:msg)
+    return
+  endif
+
+  call balloon_show(balloon_split(a:msg))
 endfunction
 
 " restore Vi compatibility settings
