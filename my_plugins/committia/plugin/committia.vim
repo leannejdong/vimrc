@@ -18,4 +18,4 @@ augroup END
 let g:loaded_committia = 1
 
 " Enable spell checking for commits within this plugin
-autocmd FileType gitcommit set spell spelllang=en_us
+autocmd BufNewFile,BufRead COMMIT_EDITMSG set spell spelllang=en_us
