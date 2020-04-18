@@ -234,6 +234,20 @@ gitgutter#fold#foldtext():  +-- 45 lines (*): abcdef
 You can use `gitgutter#fold#is_changed()` in your own `foldtext` expression to find out whether the folded lines have been changed.
 
 
+### Status line
+
+Call the `GitGutterGetHunkSummary()` function from your status line to get a list of counts of added, modified, and removed lines in the current buffer.  For example:
+
+```viml
+" Your vimrc
+function! GitStatus()
+  let [a,m,r] = GitGutterGetHunkSummary()
+  return printf('+%d ~%d -%d', a, m, r)
+endfunction
+set statusline+=%{GitStatus()}
+```
+
+
 ### Customisation
 
 You can customise:
@@ -384,6 +398,8 @@ By default buffers are diffed against the index.  However you can diff against a
 ```viml
 let g:gitgutter_diff_base = '<commit SHA>'
 ```
+
+If you are looking at a previous version of a file with Fugitive (e.g. via `:0Gclog`), gitgutter sets the diff base to the parent of the current revision.
 
 This setting is ignored when the diffs are relative to the working tree.
 
