@@ -21,4 +21,4 @@ let g:loaded_committia = 1
 autocmd BufNewFile,BufRead COMMIT_EDITMSG set spell spelllang=en_us
 
 " Disable numbers for commitia
-set number! relativenumber!
+autocmd BufNewFile,BufRead COMMIT_EDITMSG set number! relativenumber!
