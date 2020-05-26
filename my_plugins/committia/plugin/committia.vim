@@ -19,3 +19,6 @@ let g:loaded_committia = 1
 
 " Enable spell checking for commits within this plugin
 autocmd BufNewFile,BufRead COMMIT_EDITMSG set spell spelllang=en_us
+
+" Disable numbers for commitia
+set nornu
