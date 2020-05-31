@@ -8,3 +8,6 @@ set relativenumber
 " Fast quiting
 nmap <leader>q :q!<cr>
 nmap <leader>b :Gblame<cr>
+
+colorscheme gruvbox
+set background=dark
