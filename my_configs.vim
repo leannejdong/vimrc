@@ -11,3 +11,4 @@ nmap <leader>b :Gblame<cr>
 
 colorscheme gruvbox
 set background=dark
+set colorcolumn=80
